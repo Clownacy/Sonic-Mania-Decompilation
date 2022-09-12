@@ -21,4 +21,12 @@ target_link_libraries(SonicMania PRIVATE RSDKv5)
 
 if(WIIU)
 	wut_create_rpx(SonicMania)
+	wut_create_wuhb(SonicMania
+		NAME      "Sonic Mania"
+		SHORTNAME "Sonic Mania"
+		AURTHOR   "Clownacy, Rubberduckycooly, chuliRMG"
+		ICON      "../wiiu/icon.png"
+		TVSPLASH  "../wiiu/tv.png"
+		DRCSPLASH "../wiiu/drc.png"
+	)
 endif()
