@@ -311,7 +311,7 @@ void UISubHeading_SaveButton_ActionCB(void)
 {
     RSDK_THIS(UISaveSlot);
 
-    EntityMenuParam *param   = (EntityMenuParam *)globals->menuParam;
+    EntityMenuParam *param   = MenuParam_GetParam();
     EntityUIControl *control = (EntityUIControl *)self->parent;
 
     SaveRAM *saveRAM = (SaveRAM *)SaveGame_GetDataPtr(self->slotID, self->encoreMode);
@@ -350,15 +350,15 @@ void UISubHeading_SaveButton_ActionCB(void)
             saveRAM->characterID   = self->frameID;
             saveRAM->zoneID        = 0;
             saveRAM->lives         = 3;
-            saveRAM->chaosEmeralds = self->saveEmeralds;
+            saveRAM->collectedEmeralds = self->saveEmeralds;
             saveRAM->continues     = 0;
             UIWaitSpinner_StartWait();
             loadingSave = true;
             SaveGame_SaveFile(UISubHeading_SaveFileCB);
         }
         else {
-            if (saveRAM->saveState == 2) {
-                saveRAM->collectedSpecialRings = 0;
+            if (saveRAM->saveState == SAVEGAME_COMPLETE) {
+                SaveGame_ClearCollectedSpecialRings();
                 saveRAM->score                 = 0;
                 saveRAM->score1UP              = 500000;
             }

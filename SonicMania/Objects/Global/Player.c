@@ -654,7 +654,7 @@ void Player_Create(void *data)
         Player->powerups = 0;
 
         // Handle Lives/Score setup
-        EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+        EntityCompetitionSession *session = CompetitionSession_GetSession();
         if (globals->gameMode == MODE_COMPETITION) {
             self->lives    = session->lives[self->playerID];
             self->score    = 0;
@@ -852,7 +852,7 @@ void Player_LoadSprites(void)
 }
 void Player_LoadSpritesVS(void)
 {
-    EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+    EntityCompetitionSession *session = CompetitionSession_GetSession();
 
     foreach_all(Player, spawn)
     {
@@ -914,7 +914,7 @@ void Player_GiveScore(EntityPlayer *player, int32 score)
 }
 void Player_GiveRings(EntityPlayer *player, int32 amount, bool32 playSfx)
 {
-    EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+    EntityCompetitionSession *session = CompetitionSession_GetSession();
 
     if (globals->gameMode == MODE_COMPETITION)
         session->totalRings[player->playerID] += amount;
@@ -1938,7 +1938,7 @@ void Player_HandleDeath(EntityPlayer *player)
 #endif
             globals->coolBonus[player->playerID] = 0;
 
-            EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+            EntityCompetitionSession *session = CompetitionSession_GetSession();
             if (globals->gameMode == MODE_COMPETITION)
                 session->lives[player->playerID] = player->lives;
 
@@ -1951,7 +1951,7 @@ void Player_HandleDeath(EntityPlayer *player)
                         player->classID = TYPE_BLANK;
                         RSDK.ResetEntitySlot(SLOT_GAMEOVER, GameOver->classID, INT_TO_VOID(true));
 
-                        SaveRAM *saveRAM = SaveGame->saveRAM;
+                        SaveRAM *saveRAM = SaveGame_GetSaveRAM();
                         if (globals->gameMode == MODE_COMPETITION) {
                             int32 playerID                    = RSDK.GetEntitySlot(player);
                             if (!session->finishState[playerID]) {
@@ -1989,7 +1989,7 @@ void Player_HandleDeath(EntityPlayer *player)
                     }
                     else if (globals->gameMode != MODE_COMPETITION) {
                         // Regular Death, fade out and respawn
-                        SaveRAM *saveRAM = SaveGame->saveRAM;
+                        SaveRAM *saveRAM = SaveGame_GetSaveRAM();
                         if (saveRAM) {
                             saveRAM->lives    = player->lives;
                             saveRAM->score    = player->score;
@@ -3543,9 +3543,9 @@ void Player_HandleFlyCarry(EntityPlayer *leader)
 
     int32 off;
     if (leader->animator.animationID == ANI_JUMP)
-        off = self->position.y + 0x210000;
+        off = self->position.y + TO_FIXED(33);
     else
-        off = self->position.y + 0x1C0000;
+        off = self->position.y + TO_FIXED(28);
 
     if (leader->state != Player_State_FlyCarried && (!leader->onGround || self->velocity.y < 0)) {
         bool32 canFlyCarry = (leader->state == Player_State_Roll || leader->state == Player_State_LookUp || leader->state == Player_State_Crouch
@@ -3554,7 +3554,7 @@ void Player_HandleFlyCarry(EntityPlayer *leader)
             canFlyCarry = canFlyCarry && (!((1 << RSDK.GetEntitySlot(leader)) & LottoMachine->activePlayers));
 
         if (canFlyCarry && (leader->animator.animationID != ANI_FAN)) {
-            if (abs(self->position.x - leader->position.x) < 0xC0000 && abs(off - leader->position.y) < 0xC0000 && !self->flyCarryTimer
+            if (abs(self->position.x - leader->position.x) < TO_FIXED(12) && abs(off - leader->position.y) < TO_FIXED(12) && !self->flyCarryTimer
                 && !leader->down && !leader->onGround) {
                 RSDK.SetSpriteAnimation(leader->aniFrames, ANI_HANG, &leader->animator, false, 0);
                 leader->state           = Player_State_FlyCarried;
@@ -3592,8 +3592,8 @@ void Player_HandleFlyCarry(EntityPlayer *leader)
         self->velocity.x = entityXVel;
         self->velocity.y = entityYVel;
 
-        leader->position.y = entityYPos + 0x1C0000;
         leader->position.x = entityXPos;
+        leader->position.y = entityYPos + TO_FIXED(28);
         leader->velocity.x = entityXVel;
         leader->velocity.y = entityYVel;
 
@@ -6008,22 +6008,17 @@ void Player_JumpAbility_Sonic(void)
 {
     RSDK_THIS(Player);
 
-    bool32 dropdashAllowed = false;
+    bool32 dropdashDisabled = self->jumpAbilityState <= 1;
 
     if (self->jumpAbilityState == 1) {
 #if MANIA_USE_PLUS
-        if (self->stateInput != Player_Input_P2_AI
-            || (self->up
-#if MANIA_USE_PLUS
-                && globals->gameMode != MODE_ENCORE
-#endif
-                )) {
+        if (self->stateInput != Player_Input_P2_AI || (self->up && globals->gameMode != MODE_ENCORE)) {
 #else
         if (self->stateInput != Player_Input_P2_AI) {
 #endif
             if (self->jumpPress
 #if GAME_VERSION == VER_100
-                && !Player_TryTransform(self, SaveGame->saveRAM->chaosEmeralds)
+                && !Player_TryTransform(self, SaveGame_GetSaveRAM()->collectedEmeralds)
 #endif
             ) {
                 EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntitySlot(self), Shield);
@@ -6049,10 +6044,8 @@ void Player_JumpAbility_Sonic(void)
                             // [Fallthrough]
                         case SHIELD_BLUE:
                             // returns 0 if dropdash (bit 4) is disabled
-                            // returns 1 if dropdash is enabled and instashield (bit 3) is disabled
-                            // returns 2 if dropdash AND instashield are enabled
-                            if (!(globals->medalMods & MEDAL_NODROPDASH))
-                                self->jumpAbilityState = (~(globals->medalMods & 0xFF) >> 3) & 2;
+                            // returns 2 if dropdash is enabled
+                            self->jumpAbilityState = (~(globals->medalMods & 0xFF) >> 3) & 2;
                             break;
 
                         case SHIELD_BUBBLE:
@@ -6095,16 +6088,16 @@ void Player_JumpAbility_Sonic(void)
 #if GAME_VERSION != VER_100
             else {
                 if (ControllerInfo[self->controllerID].keyY.press)
-                    Player_TryTransform(self, SaveGame->saveRAM->chaosEmeralds);
+                    Player_TryTransform(self, SaveGame_GetSaveRAM()->collectedEmeralds);
             }
 #endif
             return;
         }
 
-        dropdashAllowed = true;
+        dropdashDisabled = true;
     }
 
-    if ((self->jumpAbilityState >= 2 || dropdashAllowed) && self->jumpHold) {
+    if (!dropdashDisabled && self->jumpHold) {
         if (++self->jumpAbilityState >= 22) {
             self->state           = Player_State_DropDash;
             self->nextGroundState = StateMachine_None;
@@ -6126,7 +6119,7 @@ void Player_JumpAbility_Tails(void)
 #endif
                 ))
 #if GAME_VERSION == VER_100
-        && !Player_TryTransform(self, SaveGame->saveRAM->chaosEmeralds)
+        && !Player_TryTransform(self, SaveGame_GetSaveRAM()->collectedEmeralds)
 #endif
     ) {
         if (!self->invertGravity) {
@@ -6144,7 +6137,7 @@ void Player_JumpAbility_Tails(void)
     }
 #if GAME_VERSION != VER_100
     else if (ControllerInfo[self->controllerID].keyY.press)
-        Player_TryTransform(self, SaveGame->saveRAM->chaosEmeralds);
+        Player_TryTransform(self, SaveGame_GetSaveRAM()->collectedEmeralds);
 #endif
 }
 void Player_JumpAbility_Knux(void)
@@ -6159,7 +6152,7 @@ void Player_JumpAbility_Knux(void)
 #endif
                 ))
 #if GAME_VERSION == VER_100
-        && !Player_TryTransform(self, SaveGame->saveRAM->chaosEmeralds)
+        && !Player_TryTransform(self, SaveGame_GetSaveRAM()->collectedEmeralds)
 #endif
     ) {
         if (!self->invertGravity) {
@@ -6187,7 +6180,7 @@ void Player_JumpAbility_Knux(void)
     }
 #if GAME_VERSION != VER_100
     else if (ControllerInfo[self->controllerID].keyY.press)
-        Player_TryTransform(self, SaveGame->saveRAM->chaosEmeralds);
+        Player_TryTransform(self, SaveGame_GetSaveRAM()->collectedEmeralds);
 #endif
 }
 #if MANIA_USE_PLUS
@@ -6219,7 +6212,7 @@ void Player_JumpAbility_Mighty(void)
             }
         }
         else if (ControllerInfo[self->controllerID].keyY.press)
-            Player_TryTransform(self, SaveGame->saveRAM->chaosEmeralds);
+            Player_TryTransform(self, SaveGame_GetSaveRAM()->collectedEmeralds);
     }
     else if (--self->jumpAbilityState == 1)
         self->jumpAbilityState = 0;
@@ -6270,7 +6263,7 @@ void Player_JumpAbility_Ray(void)
         }
     }
     else if (ControllerInfo[self->controllerID].keyY.press)
-        Player_TryTransform(self, SaveGame->saveRAM->chaosEmeralds);
+        Player_TryTransform(self, SaveGame_GetSaveRAM()->collectedEmeralds);
 }
 
 bool32 Player_SfxCheck_RayDive(void) { return Player->rayDiveTimer > 0; }

@@ -885,7 +885,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(KleptoMobile_State_MoveAround);
     ADD_PUBLIC_FUNC(KleptoMobile_State_Hover);
     ADD_PUBLIC_FUNC(KleptoMobile_HandleArmPositions);
-    ADD_PUBLIC_FUNC(KleptoMobile_State_HandleChargeFinish);
+    ADD_PUBLIC_FUNC(KleptoMobile_HandleChargeFinish);
     ADD_PUBLIC_FUNC(KleptoMobile_State_FirstChargeAttack);
     ADD_PUBLIC_FUNC(KleptoMobile_State_NextChargeAttacks);
     ADD_PUBLIC_FUNC(KleptoMobile_State_Switch);
@@ -1704,8 +1704,8 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(COverlay_DrawTile);
 
     // Global/Debris
-    ADD_PUBLIC_FUNC(Debris_FallFlickerAnimSetup);
-    ADD_PUBLIC_FUNC(Debris_FallFlickerSetup);
+    ADD_PUBLIC_FUNC(Debris_CreateFromEntries);
+    ADD_PUBLIC_FUNC(Debris_CreateFromEntries_UseOffset);
     ADD_PUBLIC_FUNC(Debris_State_Move);
     ADD_PUBLIC_FUNC(Debris_State_Fall);
     ADD_PUBLIC_FUNC(Debris_State_FallAndFlicker);
@@ -2008,14 +2008,14 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(ReplayRecorder_SaveReplayDLG_CB);
     ADD_PUBLIC_FUNC(ReplayRecorder_SaveReplay);
     ADD_PUBLIC_FUNC(ReplayRecorder_SaveFile_Replay);
-    ADD_PUBLIC_FUNC(ReplayRecorder_SaveUserDB_ReplayDB);
-    ADD_PUBLIC_FUNC(ReplayRecorder_SaveUserDB_TimeAttackDB);
+    ADD_PUBLIC_FUNC(ReplayRecorder_SaveCallback_ReplayDB);
+    ADD_PUBLIC_FUNC(ReplayRecorder_SaveCallback_TimeAttackDB);
     ADD_PUBLIC_FUNC(ReplayRecorder_Buffer_PackInPlace);
     ADD_PUBLIC_FUNC(ReplayRecorder_Buffer_Unpack);
-    ADD_PUBLIC_FUNC(ReplayRecorder_Buffer_SaveFile);
-    ADD_PUBLIC_FUNC(ReplayRecorder_SetReplayStatus);
     ADD_PUBLIC_FUNC(ReplayRecorder_Buffer_LoadFile);
-    ADD_PUBLIC_FUNC(ReplayRecorder_LoadFile_Replay);
+    ADD_PUBLIC_FUNC(ReplayRecorder_Buffer_SaveFile);
+    ADD_PUBLIC_FUNC(ReplayRecorder_LoadReplayCallback);
+    ADD_PUBLIC_FUNC(ReplayRecorder_SaveReplayCallback);
     ADD_PUBLIC_FUNC(ReplayRecorder_ConfigureGhost_CB);
     ADD_PUBLIC_FUNC(ReplayRecorder_SetupActions);
     ADD_PUBLIC_FUNC(ReplayRecorder_SetupWriteBuffer);
@@ -2037,19 +2037,9 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(ReplayRecorder_PlayerState_PlaybackReplay);
     ADD_PUBLIC_FUNC(ReplayRecorder_State_SetupPlayback);
     ADD_PUBLIC_FUNC(ReplayRecorder_State_Playback);
-    ADD_PUBLIC_FUNC(ReplayRecorder_Late_Playback);
     ADD_PUBLIC_FUNC(ReplayRecorder_State_Record);
+    ADD_PUBLIC_FUNC(ReplayRecorder_Late_Playback);
     ADD_PUBLIC_FUNC(ReplayRecorder_Late_RecordFrames);
-    ADD_PUBLIC_FUNC(ReplayRecorder_LoadReplayDB);
-    ADD_PUBLIC_FUNC(ReplayRecorder_SaveReplayDB);
-    ADD_PUBLIC_FUNC(ReplayRecorder_CreateReplayDB);
-    ADD_PUBLIC_FUNC(ReplayRecorder_AddReplayID);
-    ADD_PUBLIC_FUNC(ReplayRecorder_DeleteReplay);
-    ADD_PUBLIC_FUNC(ReplayRecorder_DeleteReplay_CB);
-    ADD_PUBLIC_FUNC(ReplayRecorder_DeleteReplaySave_CB);
-    ADD_PUBLIC_FUNC(ReplayRecorder_DeleteReplaySave2_CB);
-    ADD_PUBLIC_FUNC(ReplayRecorder_SetStatus);
-    ADD_PUBLIC_FUNC(ReplayRecorder_SaveUserDB_ReplayDBManager);
 #endif
 
     // Global/Ring
@@ -2076,6 +2066,7 @@ void InitPublicFunctions()
 
 #if MANIA_USE_PLUS
     // Global/SaveGame
+    ADD_PUBLIC_FUNC(SaveGame_GetSaveRAM);
     ADD_PUBLIC_FUNC(SaveGame_GetDataPtr);
 #else
     ADD_PUBLIC_FUNC(SaveGame_GetDataPtr);
@@ -2096,6 +2087,12 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(SaveGame_ResetPlayerState);
     ADD_PUBLIC_FUNC(SaveGame_LoadFile_CB);
     ADD_PUBLIC_FUNC(SaveGame_SaveFile_CB);
+    ADD_PUBLIC_FUNC(SaveGame_AllChaosEmeralds);
+    ADD_PUBLIC_FUNC(SaveGame_GetEmerald);
+    ADD_PUBLIC_FUNC(SaveGame_SetEmerald);
+    ADD_PUBLIC_FUNC(SaveGame_ClearCollectedSpecialRings);
+    ADD_PUBLIC_FUNC(SaveGame_GetCollectedSpecialRing);
+    ADD_PUBLIC_FUNC(SaveGame_SetCollectedSpecialRing);
 
     // Global/Shield
     ADD_PUBLIC_FUNC(Shield_State_Default);
@@ -2494,8 +2491,9 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(ColorHelpers_RGBToHSL);
     ADD_PUBLIC_FUNC(ColorHelpers_HSLToRGB);
 
-#if !MANIA_USE_PLUS
     // Helpers/CompetitionSession
+    ADD_PUBLIC_FUNC(CompetitionSession_GetSession);
+#if !MANIA_USE_PLUS
     ADD_PUBLIC_FUNC(CompetitionSession_ResetOptions);
     ADD_PUBLIC_FUNC(CompetitionSession_ClearMatchData);
     ADD_PUBLIC_FUNC(CompetitionSession_DeriveWinner);
@@ -2553,11 +2551,12 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(MathHelpers_ConstrainToBox);
 
     // Helpers/Options
+    ADD_PUBLIC_FUNC(Options_GetOptionsRAM);
     ADD_PUBLIC_FUNC(Options_Reload);
     ADD_PUBLIC_FUNC(Options_GetWinSize);
     ADD_PUBLIC_FUNC(Options_LoadCallback);
-    ADD_PUBLIC_FUNC(Options_LoadOptionsBin);
-    ADD_PUBLIC_FUNC(Options_SaveOptionsBin);
+    ADD_PUBLIC_FUNC(Options_LoadFile);
+    ADD_PUBLIC_FUNC(Options_SaveFile);
 #if MANIA_USE_PLUS
     ADD_PUBLIC_FUNC(Options_SetLanguage);
 #endif
@@ -2583,6 +2582,18 @@ void InitPublicFunctions()
 
     // Helpers/ReplayDB
 #if MANIA_USE_PLUS
+    ADD_PUBLIC_FUNC(ReplayDB_CreateDB);
+    ADD_PUBLIC_FUNC(ReplayDB_LoadDB);
+    ADD_PUBLIC_FUNC(ReplayDB_SaveDB);
+    ADD_PUBLIC_FUNC(ReplayDB_AddReplay);
+    ADD_PUBLIC_FUNC(ReplayDB_DeleteReplay);
+    ADD_PUBLIC_FUNC(ReplayDB_DeleteReplay_CB);
+    ADD_PUBLIC_FUNC(ReplayDB_DeleteReplaySave_CB);
+    ADD_PUBLIC_FUNC(ReplayDB_DeleteReplaySave2_CB);
+    ADD_PUBLIC_FUNC(ReplayDB_LoadDBCallback);
+    ADD_PUBLIC_FUNC(ReplayDB_SaveDBCallback);
+    ADD_PUBLIC_FUNC(ReplayDB_LoadCallback);
+
     ADD_PUBLIC_FUNC(ReplayDB_Buffer_PackEntry);
     ADD_PUBLIC_FUNC(ReplayDB_Buffer_UnpackEntry);
 #endif
@@ -2595,18 +2606,20 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(TimeAttackData_Clear);
 #endif
     ADD_PUBLIC_FUNC(TimeAttackData_GetManiaListPos);
+#if MANIA_USE_PLUS
     ADD_PUBLIC_FUNC(TimeAttackData_GetEncoreListPos);
+#endif
     ADD_PUBLIC_FUNC(TimeAttackData_GetUnpackedTime);
     ADD_PUBLIC_FUNC(TimeAttackData_GetRecordedTime);
 #if MANIA_USE_PLUS
-    ADD_PUBLIC_FUNC(TimeAttackData_LoadTimeAttackDB);
-    ADD_PUBLIC_FUNC(TimeAttackData_LoadUserDB_TimeAttackDB);
-    ADD_PUBLIC_FUNC(TimeAttackData_ResetTimeAttackDB);
+    ADD_PUBLIC_FUNC(TimeAttackData_CreateDB);
+    ADD_PUBLIC_FUNC(TimeAttackData_LoadDB);
+    ADD_PUBLIC_FUNC(TimeAttackData_SaveDB);
+    ADD_PUBLIC_FUNC(TimeAttackData_LoadDBCallback);
+    ADD_PUBLIC_FUNC(TimeAttackData_SaveDBCallback);
     ADD_PUBLIC_FUNC(TimeAttackData_MigrateLegacySaves);
-    ADD_PUBLIC_FUNC(TimeAttackData_AddTimeAttackDBEntry);
-    ADD_PUBLIC_FUNC(TimeAttackData_AddTADBEntry);
-    ADD_PUBLIC_FUNC(TimeAttackData_SaveTimeAttackDB);
-    ADD_PUBLIC_FUNC(TimeAttackData_SaveUserDB_TimeAttackDB);
+    ADD_PUBLIC_FUNC(TimeAttackData_AddDBRow);
+    ADD_PUBLIC_FUNC(TimeAttackData_AddRecord);
     ADD_PUBLIC_FUNC(TimeAttackData_GetScore);
     ADD_PUBLIC_FUNC(TimeAttackData_GetReplayID);
     ADD_PUBLIC_FUNC(TimeAttackData_ConfigureTableView);
@@ -2614,7 +2627,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(TimeAttackData_AddLeaderboardEntry);
     ADD_PUBLIC_FUNC(TimeAttackData_GetLeaderboardInfo);
 #else
-    ADD_PUBLIC_FUNC(TimeAttackData_SaveTATime);
+    ADD_PUBLIC_FUNC(TimeAttackData_AddRecord);
 #endif
 
     // HPZ/Batbot
@@ -3242,6 +3255,9 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(ManiaModeMenu_HandleMenuReturn);
 #endif
 
+    // Menu/MenuParam
+    ADD_PUBLIC_FUNC(MenuParam_GetParam);
+
     // Menu/MenuSetup
     ADD_PUBLIC_FUNC(MenuSetup_StartTransition);
 #if !MANIA_USE_PLUS
@@ -3602,8 +3618,10 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(UIKeyBinder_State_HandleButtonLeave);
     ADD_PUBLIC_FUNC(UIKeyBinder_State_HandleButtonEnter);
     ADD_PUBLIC_FUNC(UIKeyBinder_State_Selected);
+#if GAME_VERSION != VER_100
     ADD_PUBLIC_FUNC(UIKeyBinder_MoveKeyToActionCB_No);
     ADD_PUBLIC_FUNC(UIKeyBinder_MoveKeyToActionCB_Yes);
+#endif
 
     // Menu/UILeaderboard
     ADD_PUBLIC_FUNC(UILeaderboard_SetupEntrySprites);
