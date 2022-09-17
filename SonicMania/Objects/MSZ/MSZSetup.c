@@ -82,17 +82,13 @@ void MSZSetup_Create(void *data)
     if (SceneInfo->minutes || SceneInfo->seconds || SceneInfo->milliseconds) {
         if (SceneInfo->minutes == globals->tempMinutes && SceneInfo->seconds == globals->tempSeconds
             && SceneInfo->milliseconds == globals->tempMilliseconds)
-            MSZSetup->usingRegularPalette = (GAME_VERSION != VER_100 ? globals->tempFlags : globals->restartMusicID);
+            MSZSetup->usingRegularPalette = globals->tempFlags;
         else
             MSZSetup->usingRegularPalette = globals->restartFlags;
     }
     else {
-        globals->restartFlags = 0;
-#if GAME_VERSION != VER_100
-        globals->tempFlags = 0;
-#else
-        globals->restartMusicID = 0;
-#endif
+        globals->restartFlags         = 0;
+        globals->tempFlags            = 0;
         MSZSetup->usingRegularPalette = false;
     }
 
@@ -123,9 +119,7 @@ void MSZSetup_Create(void *data)
     }
 #endif
     else {
-#if !MANIA_USE_PLUS
         RSDK.CopyPalette(0, 204, 4, 204, 4);
-#endif
         RSDK.CopyPalette(3, 128, 0, 128, 128);
     }
 }
