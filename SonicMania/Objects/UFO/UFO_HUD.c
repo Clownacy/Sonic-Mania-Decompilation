@@ -14,7 +14,8 @@ void UFO_HUD_Update(void)
     RSDK_THIS(UFO_HUD);
 
 #if MANIA_USE_PLUS && GAME_VERSION != VER_107
-    if (ControllerInfo->keyY.press) {
+    // Not original code, prevents cheating unless using Debug Mode
+    if (globals->medalMods & MEDAL_DEBUGMODE && ControllerInfo->keyY.press) {
         // Not original code, should help fix some crashes/glitches that occur due to how this works through
         Entity *selfStore = SceneInfo->entity;
         SceneInfo->entity = RSDK_GET_ENTITY_GEN(SLOT_PLAYER1);
