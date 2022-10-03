@@ -203,18 +203,19 @@ void Flamethrower_HandleAngles(void)
 
             switch (self->orientation) {
                 default:
-                case FLAMETHROWER_ORIENTATION_RIGHT: self->rotation = (rot & 0x1FF); break;
-                case FLAMETHROWER_ORIENTATION_DOWN: self->rotation = ((rot + 0x180) & 0x1FF); break;
-                case FLAMETHROWER_ORIENTATION_LEFT: self->rotation = ((rot + 0x100) & 0x1FF); break;
-                case FLAMETHROWER_ORIENTATION_UP: self->rotation = ((rot + 0x180) & 0x1FF); break;
+                case FLAMETHROWER_ORIENTATION_RIGHT: self->rotation = rot; break;
+                case FLAMETHROWER_ORIENTATION_DOWN: self->rotation = rot + 0x180; break;
+                case FLAMETHROWER_ORIENTATION_LEFT: self->rotation = rot + 0x100; break;
+                case FLAMETHROWER_ORIENTATION_UP: self->rotation = rot + 0x180; break;
             }
+            self->rotation &= 0x1FF;
         }
         else {
             self->rotation = 0;
         }
     }
     else {
-        self->rotation = self->orientation == FLAMETHROWER_ORIENTATION_UP ? 0x100 : 0;
+        self->rotation = self->orientation == FLAMETHROWER_ORIENTATION_UP ? 0x100 : 0x00;
     }
 }
 
@@ -292,9 +293,9 @@ void Flamethrower_State_Init(void)
     switch (self->orientation) {
         default:
         case FLAMETHROWER_ORIENTATION_RIGHT: self->direction = FLIP_NONE; break;
-        case FLAMETHROWER_ORIENTATION_DOWN: self->direction = FLIP_NONE; break;
+        case FLAMETHROWER_ORIENTATION_DOWN: self->direction = MANIA_USE_PLUS ? FLIP_NONE : FLIP_Y; break;
         case FLAMETHROWER_ORIENTATION_LEFT: self->direction = FLIP_X; break;
-        case FLAMETHROWER_ORIENTATION_UP: self->direction = FLIP_Y; break;
+        case FLAMETHROWER_ORIENTATION_UP: self->direction = MANIA_USE_PLUS ? FLIP_Y : FLIP_NONE; break;
     }
 
     Flamethrower_SetupOrientation(self->orientation);
@@ -386,9 +387,9 @@ void Flamethrower_State_SetupFireball(void)
     switch (self->orientation) {
         default:
         case FLAMETHROWER_ORIENTATION_RIGHT: self->direction = FLIP_NONE; break;
-        case FLAMETHROWER_ORIENTATION_DOWN: self->direction = FLIP_NONE; break;
+        case FLAMETHROWER_ORIENTATION_DOWN: self->direction = MANIA_USE_PLUS ? FLIP_NONE : FLIP_Y; break;
         case FLAMETHROWER_ORIENTATION_LEFT: self->direction = FLIP_X; break;
-        case FLAMETHROWER_ORIENTATION_UP: self->direction = FLIP_Y; break;
+        case FLAMETHROWER_ORIENTATION_UP: self->direction = MANIA_USE_PLUS ? FLIP_Y : FLIP_NONE; break;
     }
 
     if (RSDK.CheckSceneFolder("LRZ3"))
@@ -430,10 +431,12 @@ void Flamethrower_State_Fireball(void)
         self->currentDist += MathHelpers_SquareRoot((rx * rx + ry * ry) >> 16);
     }
 
+#if MANIA_USE_PLUS
     if (self->orientation == FLAMETHROWER_ORIENTATION_UP && self->velocity.y > 0) {
         self->orientation = FLAMETHROWER_ORIENTATION_DOWN;
         self->direction   = FLIP_NONE;
     }
+#endif
 
     Flamethrower_HandleAnimations();
     Flamethrower_HandleTileCollisions();
@@ -459,9 +462,9 @@ void Flamethrower_EditorDraw(void)
     switch (self->orientation) {
         default:
         case FLAMETHROWER_ORIENTATION_RIGHT: self->direction = FLIP_NONE; break;
-        case FLAMETHROWER_ORIENTATION_DOWN: self->direction = FLIP_NONE; break;
+        case FLAMETHROWER_ORIENTATION_DOWN: self->direction = MANIA_USE_PLUS ? FLIP_NONE : FLIP_Y; break;
         case FLAMETHROWER_ORIENTATION_LEFT: self->direction = FLIP_X; break;
-        case FLAMETHROWER_ORIENTATION_UP: self->direction = FLIP_Y; break;
+        case FLAMETHROWER_ORIENTATION_UP: self->direction = MANIA_USE_PLUS ? FLIP_Y : FLIP_NONE; break;
     }
 
     Flamethrower_Draw();
