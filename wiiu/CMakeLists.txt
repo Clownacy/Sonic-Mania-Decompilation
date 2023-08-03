@@ -19,6 +19,8 @@ target_compile_definitions(SonicMania PRIVATE
 add_subdirectory("../dependencies/RSDKv5/wiiu" EXCLUDE_FROM_ALL "RSDKv5")
 target_link_libraries(SonicMania PRIVATE RSDKv5)
 
+target_include_directories(RSDKv5 PRIVATE "../SonicMania")
+
 if(WIIU)
 	wut_create_rpx(SonicMania)
 	wut_create_wuhb(SonicMania
