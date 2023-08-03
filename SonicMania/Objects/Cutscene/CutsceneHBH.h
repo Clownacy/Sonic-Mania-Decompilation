@@ -9,9 +9,9 @@ typedef enum {
     HBH_MYSTIC,
     HBH_RIDER,
     HBH_KING,
-    HBH_ROUGE_FANG,
-    HBH_ROUGE_BEAN,
-    HBH_ROUGE_BARK,
+    HBH_ROGUE_FANG,
+    HBH_ROGUE_BEAN,
+    HBH_ROGUE_BARK,
     HBH_KINGDAMAGED,
     HBH_PILE,
     HBH_KINGTMZ2,
@@ -56,7 +56,7 @@ void CutsceneHBH_StaticUpdate(void);
 void CutsceneHBH_Draw(void);
 void CutsceneHBH_Create(void *data);
 void CutsceneHBH_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void CutsceneHBH_EditorDraw(void);
 void CutsceneHBH_EditorLoad(void);
 #endif

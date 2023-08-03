@@ -25,7 +25,7 @@ void MetalSonic_Update(void)
         MetalSonic->invincibilityTimerPanel--;
 
 #if MANIA_USE_PLUS
-    foreach_active(StarPost, post) { post->starTimer = 0; }
+    foreach_active(StarPost, post) { post->bonusStageID = 0; }
 #endif
 }
 
@@ -2157,7 +2157,7 @@ void MetalSonic_StateWall_Move(void)
 }
 #endif
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void MetalSonic_EditorDraw(void)
 {
     RSDK_THIS(MetalSonic);

@@ -44,7 +44,7 @@ void DoorTrigger_Update(void)
     else {
         foreach_active(Player, player)
         {
-            if (!player->sidekick && Player_CheckAttacking(player, self)) {
+            if (!player->sidekick && Player_CheckAttackingNoInvTimer(player, self)) {
                 if (Player_CheckCollisionTouch(player, self, &DoorTrigger->hitboxBulb[self->baseAnimator.frameID])) {
                     self->bulbAnimator.frameID = 1;
                     if (player->characterID == ID_KNUCKLES && player->animator.animationID == ANI_GLIDE) {
@@ -197,7 +197,7 @@ void DoorTrigger_StageLoad(void)
     DoorTrigger->sfxShatter = RSDK.GetSfx("Stage/WindowShatter.wav");
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void DoorTrigger_EditorDraw(void)
 {
     RSDK_THIS(DoorTrigger);

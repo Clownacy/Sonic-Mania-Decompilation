@@ -10,14 +10,14 @@ struct ObjectMSZCutsceneST {
     uint16 unused1;
     uint16 unused2;
     Vector2 tornadoStartPos;
-    uint8 rougeID;
+    uint8 rogueID;
     EntitySignPost *signPost;
     EntityCutsceneHBH *mystic;
     EntityTornado *tornado;
     EntityTornadoPath *tornadoPath;
     Entity *projectile;
-    EntityCutsceneHBH *rouges[3];
-    EntityArmadiloid *rougePlatforms[3];
+    EntityCutsceneHBH *rogues[3];
+    EntityArmadiloid *roguePlatforms[3];
     bool32 finishedAct;
     bool32 isMayday;
     uint16 sfxExplosion3;
@@ -51,7 +51,7 @@ void MSZCutsceneST_StaticUpdate(void);
 void MSZCutsceneST_Draw(void);
 void MSZCutsceneST_Create(void *data);
 void MSZCutsceneST_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void MSZCutsceneST_EditorDraw(void);
 void MSZCutsceneST_EditorLoad(void);
 #endif
@@ -64,7 +64,7 @@ bool32 MSZCutsceneST_Cutscene_HandleSignPostLand(EntityCutsceneSeq *host);
 bool32 MSZCutsceneST_Cutscene_AwaitActFinish(EntityCutsceneSeq *host);
 bool32 MSZCutsceneST_Cutscene_EnterMystic(EntityCutsceneSeq *host);
 bool32 MSZCutsceneST_Cutscene_PrepareAmbush(EntityCutsceneSeq *host);
-bool32 MSZCutsceneST_Cutscene_RougesAmbush(EntityCutsceneSeq *host);
+bool32 MSZCutsceneST_Cutscene_RoguesAmbush(EntityCutsceneSeq *host);
 bool32 MSZCutsceneST_Cutscene_ShowFang(EntityCutsceneSeq *host);
 bool32 MSZCutsceneST_Cutscene_ShowBean(EntityCutsceneSeq *host);
 bool32 MSZCutsceneST_Cutscene_ShowBark(EntityCutsceneSeq *host);

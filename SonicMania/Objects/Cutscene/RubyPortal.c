@@ -184,9 +184,11 @@ void RubyPortal_HandleTileDestruction(void)
                 }
 
                 spawnY += 0x100000;
+                ty++;
             }
 
             spawnX += 0x100000;
+            tx++;
         }
     }
 }
@@ -422,7 +424,7 @@ void RubyPortal_State_EncoreRampage(void)
 }
 #endif
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void RubyPortal_EditorDraw(void)
 {
     RSDK_THIS(RubyPortal);

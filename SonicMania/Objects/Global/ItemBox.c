@@ -952,6 +952,9 @@ bool32 ItemBox_HandlePlatformCollision(void *plat)
                 break;
 
             case PLATFORM_C_TILED:
+                if (!RSDK.CheckObjectCollisionTouchBox(platform, &platform->hitbox, self, &ItemBox->hitboxItemBox))
+                    break;
+
                 if (self->collisionLayers & Zone->moveLayerMask) {
                     TileLayer *move  = RSDK.GetTileLayer(Zone->moveLayer);
                     move->position.x = -(platform->drawPos.x + platform->tileOrigin.x) >> 16;
@@ -968,8 +971,6 @@ bool32 ItemBox_HandlePlatformCollision(void *plat)
                 break;
 
             default:
-                if (RSDK.CheckObjectCollisionTouchBox(platform, &platform->hitbox, self, &ItemBox->hitboxItemBox))
-                    collided = true;
                 break;
         }
 
@@ -1187,7 +1188,7 @@ void ItemBox_HandleObjectCollisions(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void ItemBox_EditorDraw(void)
 {
     RSDK_THIS(ItemBox);
@@ -1204,6 +1205,7 @@ void ItemBox_EditorDraw(void)
     self->inkEffect = INK_ALPHA;
     self->alpha     = self->hidden ? 0x80 : 0x100;
 
+    RSDK.SetSpriteAnimation(ItemBox->aniFrames, 2, &self->contentsAnimator, true, self->type);
     RSDK.DrawSprite(&self->boxAnimator, NULL, false);
     RSDK.DrawSprite(&self->contentsAnimator, &self->contentsPos, false);
 

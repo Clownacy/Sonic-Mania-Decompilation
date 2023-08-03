@@ -552,11 +552,11 @@ bool32 TMZ2Outro_Cutscene_OuttaHere(EntityCutsceneSeq *host)
     }
 
     if (host->timer == 300) {
-        foreach_active(PhantomRuby, ruby)
+        foreach_active(RubyPortal, portal)
         {
-            ruby->velocity.x  = 0x20000;
-            ruby->isPermanent = true;
-            ruby->active      = ACTIVE_NORMAL;
+            portal->velocity.x  = 0x20000;
+            portal->isPermanent = true;
+            portal->active      = ACTIVE_NORMAL;
         }
 
         RSDK_GET_ENTITY(SLOT_CAMERA1, Camera)->state = StateMachine_None;
@@ -600,17 +600,17 @@ bool32 TMZ2Outro_Cutscene_TeamEscape(EntityCutsceneSeq *host)
         player2->playerID = 1;
         Player_ChangeCharacter(player2, ID_TAILS);
 
-        EntityPlayer *player3 = RSDK_GET_ENTITY(SLOT_PLAYER3, Player);
+        EntityPlayer *player3 = RSDK_GET_ENTITY(SLOT_PLAYER4, Player);
         RSDK.CopyEntity(player3, player1, false);
         player3->playerID = 3;
         Player_ChangeCharacter(player3, ID_KNUCKLES);
 
-        EntityPlayer *player4 = RSDK_GET_ENTITY(SLOT_PLAYER4, Player);
+        EntityPlayer *player4 = RSDK_GET_ENTITY(SLOT_PLAYER5, Player);
         RSDK.CopyEntity(player4, player1, false);
         player4->playerID = 4;
         Player_ChangeCharacter(player4, ID_MIGHTY);
 
-        EntityPlayer *player5 = RSDK_GET_ENTITY(5, Player);
+        EntityPlayer *player5 = RSDK_GET_ENTITY(SLOT_PLAYER6, Player);
         RSDK.CopyEntity(player5, player1, false);
         player5->playerID = 5;
         Player_ChangeCharacter(player5, ID_RAY);
@@ -755,7 +755,7 @@ void TMZ2Outro_SaveFileCB(bool32 success) { TMZ2Outro->finishedSaving = true; }
 void TMZ2Outro_SaveFileCB(void) { TMZ2Outro->finishedSaving = true; }
 #endif
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void TMZ2Outro_EditorDraw(void) {}
 
 void TMZ2Outro_EditorLoad(void) {}

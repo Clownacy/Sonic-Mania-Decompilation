@@ -323,7 +323,7 @@ void TimeAttackGate_CheckTouch(void)
             Zone->cameraBoundsR[p] = (self->position.x >> 16) + ScreenInfo[p].center.x;
 
             if (self->topBoundary)
-                Zone->cameraBoundsT[p] = (self->position.y) - ScreenInfo[p].center.y;
+                Zone->cameraBoundsT[p] = (self->position.y >> 16) - ScreenInfo[p].center.y;
         }
     }
 }
@@ -522,7 +522,7 @@ void TimeAttackGate_Draw_Restarter(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void TimeAttackGate_EditorDraw(void)
 {
     RSDK_THIS(TimeAttackGate);

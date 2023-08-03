@@ -89,7 +89,7 @@ void FlowerPod_State_Pod(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckAttacking(player, self) && Player_CheckBadnikTouch(player, self, &FlowerPod->hitboxPod))
+        if (Player_CheckAttackingNoInvTimer(player, self) && Player_CheckBadnikTouch(player, self, &FlowerPod->hitboxPod))
             self->state = FlowerPod_State_Exploding;
     }
 }
@@ -205,7 +205,7 @@ void FlowerPod_State_Flower(void)
     RSDK.ProcessAnimation(&self->podAnimator);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void FlowerPod_EditorDraw(void)
 {
     RSDK_THIS(FlowerPod);

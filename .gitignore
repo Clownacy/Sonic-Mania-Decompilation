@@ -5,6 +5,7 @@
 CMakeFiles/
 cmake_install.cmake
 CMakeCache.txt
+CMakeUserPresets.json
 
 # User-specific files
 *.suo
@@ -247,3 +248,4 @@ Ignored/
 android/local.properties
 
 *.res
+dependencies/*

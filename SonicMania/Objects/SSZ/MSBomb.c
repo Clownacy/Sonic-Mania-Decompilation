@@ -108,13 +108,12 @@ void MSBomb_State_SilverSonicExplode(void)
         }
 
         EntityMSBomb *bomb = CREATE_ENTITY(MSBomb, INT_TO_VOID(true), self->position.x, self->position.y);
-        yVel               = -yVel;
         bomb->velocity.x   = -xVel;
-        bomb->velocity.y   = yVel;
+        bomb->velocity.y   = -yVel;
 
         bomb             = CREATE_ENTITY(MSBomb, INT_TO_VOID(true), self->position.x, self->position.y);
         bomb->velocity.x = xVel;
-        bomb->velocity.y = yVel;
+        bomb->velocity.y = -yVel;
 
         bomb             = CREATE_ENTITY(MSBomb, INT_TO_VOID(true), self->position.x, self->position.y);
         yVel             = -(yVel >> 1);
@@ -212,7 +211,7 @@ void MSBomb_State_Projectile(void)
         destroyEntity(self);
 }
 
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void MSBomb_EditorDraw(void)
 {
     RSDK_THIS(MSBomb);

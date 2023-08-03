@@ -1908,6 +1908,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(Player_HurtFlip);
     ADD_PUBLIC_FUNC(Player_ElementHurt);
     ADD_PUBLIC_FUNC(Player_CheckAttacking);
+    ADD_PUBLIC_FUNC(Player_CheckAttackingNoInvTimer);
     ADD_PUBLIC_FUNC(Player_CheckBadnikTouch);
     ADD_PUBLIC_FUNC(Player_CheckBadnikBreak);
     ADD_PUBLIC_FUNC(Player_CheckBossHit);
@@ -4312,15 +4313,15 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(HeavyMystic_StateBoss_AwaitBoxClosing);
     ADD_PUBLIC_FUNC(HeavyMystic_StateBoss_AwaitBoxClosed);
     ADD_PUBLIC_FUNC(HeavyMystic_StateBoss_Transforming);
-    ADD_PUBLIC_FUNC(HeavyMystic_StateBoss_ShowRouge);
+    ADD_PUBLIC_FUNC(HeavyMystic_StateBoss_ShowRogue);
     ADD_PUBLIC_FUNC(HeavyMystic_StateBoss_MysticReveal);
     ADD_PUBLIC_FUNC(HeavyMystic_StateBoss_MoveToBoxY);
     ADD_PUBLIC_FUNC(HeavyMystic_StateBoss_MoveToBoxX);
-    ADD_PUBLIC_FUNC(HeavyMystic_StateBoss_TransformBackIntoRouge);
+    ADD_PUBLIC_FUNC(HeavyMystic_StateBoss_TransformBackIntoRogue);
     ADD_PUBLIC_FUNC(HeavyMystic_StateBoss_FangIdle);
     ADD_PUBLIC_FUNC(HeavyMystic_StateBoss_FangTell);
     ADD_PUBLIC_FUNC(HeavyMystic_StateBoss_FangHop);
-    ADD_PUBLIC_FUNC(HeavyMystic_StateBoss_RougeHit);
+    ADD_PUBLIC_FUNC(HeavyMystic_StateBoss_RogueHit);
     ADD_PUBLIC_FUNC(HeavyMystic_StateBoss_BarkIdle);
     ADD_PUBLIC_FUNC(HeavyMystic_StateBoss_BarkPounding);
     ADD_PUBLIC_FUNC(HeavyMystic_StateBoss_BarkJump);
@@ -4380,7 +4381,7 @@ void InitPublicFunctions()
     ADD_PUBLIC_FUNC(MSZCutsceneST_Cutscene_AwaitActFinish);
     ADD_PUBLIC_FUNC(MSZCutsceneST_Cutscene_EnterMystic);
     ADD_PUBLIC_FUNC(MSZCutsceneST_Cutscene_PrepareAmbush);
-    ADD_PUBLIC_FUNC(MSZCutsceneST_Cutscene_RougesAmbush);
+    ADD_PUBLIC_FUNC(MSZCutsceneST_Cutscene_RoguesAmbush);
     ADD_PUBLIC_FUNC(MSZCutsceneST_Cutscene_ShowFang);
     ADD_PUBLIC_FUNC(MSZCutsceneST_Cutscene_ShowBean);
     ADD_PUBLIC_FUNC(MSZCutsceneST_Cutscene_ShowBark);

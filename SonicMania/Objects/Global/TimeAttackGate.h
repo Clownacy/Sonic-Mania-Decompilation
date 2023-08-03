@@ -32,7 +32,7 @@ struct EntityTimeAttackGate {
     int32 extendBottom;
     Vector2 boundsSize;
     Vector2 boundsOffset;
-    int32 topBoundary;
+    bool32 topBoundary;
     int32 timer;
     bool32 hasFinished;
     int32 baseRotation;
@@ -57,7 +57,7 @@ void TimeAttackGate_StaticUpdate(void);
 void TimeAttackGate_Draw(void);
 void TimeAttackGate_Create(void *data);
 void TimeAttackGate_StageLoad(void);
-#if RETRO_INCLUDE_EDITOR
+#if GAME_INCLUDE_EDITOR
 void TimeAttackGate_EditorDraw(void);
 void TimeAttackGate_EditorLoad(void);
 #endif
